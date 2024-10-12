@@ -51,7 +51,7 @@ fn test_primary_exprs() {
 fn test_primary_expr_str(s: &str) {
   let parsed = full_primary_expr_parser().parse(s);
   match parsed.into_result() {
-    Ok(v) => {},
+    Ok(_) => {},
     Err(e) => panic!("Failed to parse: {} - {:?}", s, e),
   }
 }
@@ -75,7 +75,7 @@ fn test_unary_exprs() {
 fn test_unary_expr_str(s: &str) {
   let parsed = full_unary_expr_parser().parse(s);
   match parsed.into_result() {
-    Ok(v) => {},
+    Ok(_) => {},
     Err(e) => panic!("Failed to parse: {} - {:?}", s, e),
   }
 }
@@ -100,7 +100,7 @@ fn test_bit_exprs() {
 fn test_bit_expr_str(s: &str) {
   let parsed = full_bit_expr_parser().parse(s);
   match parsed.into_result() {
-    Ok(v) => {},
+    Ok(_) => {},
     Err(e) => panic!("Failed to parse: {} - {:?}", s, e),
   }
 }

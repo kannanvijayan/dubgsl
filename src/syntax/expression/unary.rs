@@ -45,9 +45,13 @@ pub(crate) fn unary_expr_parser<'a, E>(
     .collect::<Vec<_>>()
     .then(primary_expr_parser(base_expr))
     .map(|(ops, expr)| {
-      ops.into_iter().rev().fold(expr, |expr, op| {
-        Expression::Unary(UnaryExpr { op, subexpr: Box::new(expr) })
-      })
+      if ops.len() == 0 {
+        expr
+      } else {
+        ops.into_iter().rev().fold(expr, |expr, op| {
+          Expression::Unary(UnaryExpr { op, subexpr: Box::new(expr) })
+        })
+      }
     })
     .boxed()
 }

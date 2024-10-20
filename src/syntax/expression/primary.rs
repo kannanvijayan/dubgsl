@@ -50,7 +50,7 @@ pub(crate) fn primary_expr_parser<'a, E>(
   }
 
   let dot_tail_parser = 
-    just(".").padded_by(whitespace_parser()).ignored()
+    just(".").padded_by(whitespace_parser())
       .ignore_then(
         choice((
           Name::parser().map(DotExprSuffix::Name),

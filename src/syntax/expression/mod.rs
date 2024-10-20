@@ -66,10 +66,7 @@ impl<'a> Expression<'a> {
     use chumsky::prelude::*;
 
     recursive(|expr_parser| {
-      choice((
-        logical_expr_parser(expr_parser.clone()),
-        bit_expr_parser(expr_parser),
-      ))
+      logical_expr_parser(expr_parser.clone())
     }).boxed()
   }
 }

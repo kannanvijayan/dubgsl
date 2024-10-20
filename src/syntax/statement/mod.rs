@@ -72,24 +72,35 @@ impl<'a> Statement<'a> {
  */
 #[derive(Clone, Debug)]
 pub struct StatementBlock<'a> {
-  statements: Vec<Statement<'a>>,
+  pub statements: Vec<Statement<'a>>,
 }
 impl<'a> StatementBlock<'a> {
   pub fn parser<E>(
-    stmt_parser: impl Clone + Parser<'a, &'a str, Statement<'a>, E>
-  ) -> impl Clone + Parser<'a, &'a str, StatementBlock<'a>, E>
+    stmt_parser: impl 'a + Clone + Parser<'a, &'a str, Statement<'a>, E>
+  ) -> impl 'a + Clone + Parser<'a, &'a str, StatementBlock<'a>, E>
     where E: ParserExtra<'a, &'a str>
   {
     use chumsky::prelude::*;
 
-    just('{').padded_by(whitespace_parser())
-    .ignore_then(
-      stmt_parser
-        .then_ignore(just(';').padded_by(whitespace_parser()))
-        .repeated()
-        .collect::<Vec<_>>()
-    )
-    .then_ignore(just('}').padded_by(whitespace_parser()))
-    .map(|statements| StatementBlock { statements })
+    stmt_parser
+      .repeated()
+      .collect::<Vec<_>>()
+      .delimited_by(
+        just('{').padded_by(whitespace_parser()),
+        just('}').padded_by(whitespace_parser())
+      )
+      .map(|statements| StatementBlock { statements })
+      .boxed()
   }
+}
+
+/**
+ * A helper to terminate a statement with a semicolon.
+ */
+fn terminal_semicolon_parser<'a, E>()
+  -> impl Clone + Parser<'a, &'a str, (), E>
+  where E: ParserExtra<'a, &'a str>
+{
+  use chumsky::prelude::*;
+  just(';').padded_by(whitespace_parser()).map(|_| ())
 }

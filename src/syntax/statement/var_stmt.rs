@@ -5,8 +5,8 @@ use chumsky::{
 use crate::syntax::{
   expression::Expression,
   name::Name,
-  util::whitespace_parser,
-  util::whitespace1_parser,
+  statement::terminal_semicolon_parser,
+  util::{ whitespace_parser, whitespace1_parser },
 };
 
 /**
@@ -48,4 +48,5 @@ pub(crate) fn var_stmt_parser<'a, E>()
           .collect::<Vec<_>>();
       VarStmt { pieces }
     })
+    .then_ignore(terminal_semicolon_parser())
 }

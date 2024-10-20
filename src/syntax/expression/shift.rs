@@ -5,7 +5,7 @@ use chumsky::{
 use crate::syntax::{
   expression::{
     Expression,
-    unary_expr_parser,
+    bit_expr_parser,
   },
   util::whitespace_parser,
 };
@@ -38,10 +38,10 @@ pub(crate) fn shift_expr_parser<'a, E>(
     just(">>").map(|_| ShiftExprOp::Shr),
   ));
 
-  unary_expr_parser(base_expr.clone())
+  bit_expr_parser(base_expr.clone())
     .then(
       shift_op_parser.padded_by(whitespace_parser())
-        .then(unary_expr_parser(base_expr.clone()))
+        .then(bit_expr_parser(base_expr.clone()))
         .or_not()
     )
     .map(|(lhs, maybe_rest)| {

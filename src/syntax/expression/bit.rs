@@ -11,7 +11,7 @@ use crate::syntax::{
 };
 
 /**
- * A dot-expression accesses a component of a value expression.
+ * A bitwise (and, or, xor) binary expression.
  */
 #[derive(Debug, Clone)]
 pub struct BitExpr<'a> {
@@ -27,29 +27,9 @@ pub enum BitExprOp {
   And,
 }
 
-fn make_bit_op_parser<'a, E>(
-  op_char: char,
-  op: BitExprOp,
-  base_expr: impl Clone + Parser<'a, &'a str, Expression<'a>, E>)
-  -> impl Clone + Parser<'a, &'a str, Expression<'a>, E>
-  where E: ParserExtra<'a, &'a str>
-{
-  use chumsky::prelude::*;
-  unary_expr_parser(base_expr)
-    .separated_by(just(op_char).padded_by(whitespace_parser()))
-    .at_least(1)
-    .collect::<Vec<_>>()
-    .map(move |mut exprs| {
-      let expr = exprs.remove(0);
-      exprs.into_iter().fold(expr, |lhs, rhs| {
-        Expression::Bit(BitExpr { lhs: lhs.boxed(), op, rhs: rhs.boxed() })
-      })
-    })
-}
-
 pub(crate) fn bit_expr_parser<'a, E>(
-  base_expr: impl Clone + Parser<'a, &'a str, Expression<'a>, E>
-) -> impl Clone + Parser<'a, &'a str, Expression<'a>, E>
+  base_expr: impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
+) -> impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
   where E: ParserExtra<'a, &'a str>
 {
   use chumsky::prelude::*;
@@ -92,5 +72,5 @@ pub(crate) fn bit_expr_parser<'a, E>(
       } else {
         lhs
       }
-    })
+    }).boxed()
 }

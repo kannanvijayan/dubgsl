@@ -6,7 +6,7 @@ use crate::syntax::{
   name::Name,
   expression::{
     Expression,
-    terminal::terminal_expr_parser,
+    terminal_expr_parser,
   },
   util::whitespace_parser,
 };
@@ -39,8 +39,8 @@ pub struct CallExpr<'a> {
 }
 
 pub(crate) fn primary_expr_parser<'a, E>(
-  base_expr: impl Clone + Parser<'a, &'a str, Expression<'a>, E>
-) -> impl Clone + Parser<'a, &'a str, Expression<'a>, E>
+  base_expr: impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
+) -> impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
   where E: ParserExtra<'a, &'a str>
 {
   use chumsky::prelude::*;
@@ -89,4 +89,5 @@ pub(crate) fn primary_expr_parser<'a, E>(
           Expression::Call(CallExpr { callee: Box::new(target), args }),
       })
     })
+    .boxed()
 }

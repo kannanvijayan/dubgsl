@@ -5,7 +5,7 @@ use chumsky::{
 use crate::syntax::{
   expression::{
     Expression,
-    primary::primary_expr_parser,
+    primary_expr_parser,
   },
   util::whitespace_parser,
 };
@@ -22,18 +22,20 @@ pub struct UnaryExpr<'a> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UnaryExprOp {
   Negate,
+  Positive,
   Not,
   Complement,
 }
 
 pub(crate) fn unary_expr_parser<'a, E>(
-  base_expr: impl Clone + Parser<'a, &'a str, Expression<'a>, E>
-) -> impl Clone + Parser<'a, &'a str, Expression<'a>, E>
+  base_expr: impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
+) -> impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
   where E: ParserExtra<'a, &'a str>
 {
   use chumsky::prelude::*;
   let unary_op_parser = choice((
     just('-').map(|_| UnaryExprOp::Negate),
+    just('+').map(|_| UnaryExprOp::Positive),
     just('!').map(|_| UnaryExprOp::Not),
     just('~').map(|_| UnaryExprOp::Complement),
   ));
@@ -47,4 +49,5 @@ pub(crate) fn unary_expr_parser<'a, E>(
         Expression::Unary(UnaryExpr { op, subexpr: Box::new(expr) })
       })
     })
+    .boxed()
 }

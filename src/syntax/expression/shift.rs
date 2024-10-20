@@ -11,50 +11,44 @@ use crate::syntax::{
 };
 
 /**
- * A multiplicative (mul, div, mod) binary expression.
+ * A shift (shl, shr) binary expression.
  */
 #[derive(Debug, Clone)]
-pub struct MulExpr<'a> {
+pub struct ShiftExpr<'a> {
   pub lhs: Box<Expression<'a>>,
-  pub op: MulExprOp,
+  pub op: ShiftExprOp,
   pub rhs: Box<Expression<'a>>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum MulExprOp {
-  Mul,
-  Div,
-  Mod,
+pub enum ShiftExprOp {
+  Shl,
+  Shr,
 }
 
-pub(crate) fn mul_expr_parser<'a, E>(
+pub(crate) fn shift_expr_parser<'a, E>(
   base_expr: impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
 ) -> impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
   where E: ParserExtra<'a, &'a str>
 {
   use chumsky::prelude::*;
 
-  let mul_op_parser = choice((
-    just('*').map(|_| MulExprOp::Mul),
-    just('/').map(|_| MulExprOp::Div),
-    just('%').map(|_| MulExprOp::Mod),
+  let shift_op_parser = choice((
+    just("<<").map(|_| ShiftExprOp::Shl),
+    just(">>").map(|_| ShiftExprOp::Shr),
   ));
 
   unary_expr_parser(base_expr.clone())
     .then(
-      mul_op_parser.padded_by(whitespace_parser())
+      shift_op_parser.padded_by(whitespace_parser())
         .then(unary_expr_parser(base_expr.clone()))
-        .repeated()
-        .collect::<Vec<_>>()
         .or_not()
     )
-    .map(|(first, rest)| {
-      if let Some(rest) = rest {
-        rest.into_iter().fold(first, |lhs, (op, rhs)| {
-          Expression::Mul(MulExpr { lhs: lhs.boxed(), op, rhs: rhs.boxed() })
-        })
-      } else {
-        first
+    .map(|(lhs, maybe_rest)| {
+      match maybe_rest {
+        Some((op, rhs)) =>
+          Expression::Shift(ShiftExpr { lhs: lhs.boxed(), op, rhs: rhs.boxed() }),
+        None => lhs
       }
     })
     .boxed()

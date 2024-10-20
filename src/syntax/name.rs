@@ -49,6 +49,7 @@ impl<'a> NamePath<'a> {
         let name = names.pop().expect("Empty name path");
         NamePath { prefix: names, name }
       })
+      .boxed()
   }
 }
 

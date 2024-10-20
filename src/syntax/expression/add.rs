@@ -5,45 +5,43 @@ use chumsky::{
 use crate::syntax::{
   expression::{
     Expression,
-    unary_expr_parser,
+    mul_expr_parser,
   },
   util::whitespace_parser,
 };
 
 /**
- * A multiplicative (mul, div, mod) binary expression.
+ * An additive (add, sub) binary expression.
  */
 #[derive(Debug, Clone)]
-pub struct MulExpr<'a> {
+pub struct AddExpr<'a> {
   pub lhs: Box<Expression<'a>>,
-  pub op: MulExprOp,
+  pub op: AddExprOp,
   pub rhs: Box<Expression<'a>>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum MulExprOp {
-  Mul,
-  Div,
-  Mod,
+pub enum AddExprOp {
+  Add,
+  Sub,
 }
 
-pub(crate) fn mul_expr_parser<'a, E>(
+pub(crate) fn add_expr_parser<'a, E>(
   base_expr: impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
-) -> impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
+) -> impl Clone + Parser<'a, &'a str, Expression<'a>, E>
   where E: ParserExtra<'a, &'a str>
 {
   use chumsky::prelude::*;
 
-  let mul_op_parser = choice((
-    just('*').map(|_| MulExprOp::Mul),
-    just('/').map(|_| MulExprOp::Div),
-    just('%').map(|_| MulExprOp::Mod),
+  let add_op_parser = choice((
+    just('+').map(|_| AddExprOp::Add),
+    just('-').map(|_| AddExprOp::Sub),
   ));
 
-  unary_expr_parser(base_expr.clone())
+  mul_expr_parser(base_expr.clone())
     .then(
-      mul_op_parser.padded_by(whitespace_parser())
-        .then(unary_expr_parser(base_expr.clone()))
+      add_op_parser.padded_by(whitespace_parser())
+        .then(mul_expr_parser(base_expr.clone()))
         .repeated()
         .collect::<Vec<_>>()
         .or_not()
@@ -51,7 +49,7 @@ pub(crate) fn mul_expr_parser<'a, E>(
     .map(|(first, rest)| {
       if let Some(rest) = rest {
         rest.into_iter().fold(first, |lhs, (op, rhs)| {
-          Expression::Mul(MulExpr { lhs: lhs.boxed(), op, rhs: rhs.boxed() })
+          Expression::Add(AddExpr { lhs: lhs.boxed(), op, rhs: rhs.boxed() })
         })
       } else {
         first

@@ -29,10 +29,10 @@ fn test_statements() {
   test_stmt_str("if 3 { let x = 3; } else { let y = 4; }");
   test_stmt_str("if 3 { let x = 3; } else { }");
   test_stmt_str("if x.bang == 3 {} else { let y = 4; }");
-  test_stmt_str("if foo(bar, 3, abc.def(33)) == abc.q { let x = 3; }");
+  test_stmt_str("if foo(bar >> 9, 3, abc.def(33)) == abc.q { let x = 3; }");
   test_stmt_str("loop  {
     let a = 9;
-    if (a == foo.bar + (22 * q + 5 * (-z.q(9)))) {
+    if (a == foo.bar >> (22 * q + 5 * (-z.q(9)))) {
       exec doThing(a + 2);
     } else {
        ret blah(foo(a)) ;
@@ -49,9 +49,7 @@ fn test_exec_ret_expr(s: &str) {
 fn test_stmt_str(s: &str) {
   let parsed = statement_parser().parse(s);
   match parsed.into_result() {
-    Ok(res) => {
-        println!("KVKV - STATEMENT: {:?}", res);
-    },
+    Ok(_) => {},
     Err(e) => panic!("Failed to parse: {} - {:?}", s, e),
   }
 }

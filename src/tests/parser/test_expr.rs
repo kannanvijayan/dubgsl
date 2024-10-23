@@ -12,6 +12,7 @@ use crate::syntax::expression::{
   bit_expr_parser,
   mul_expr_parser,
   add_expr_parser,
+  shift_expr_parser,
   relational_expr_parser,
   logical_expr_parser,
 };
@@ -165,6 +166,33 @@ fn full_add_expr_parser<'a>()
   use chumsky::prelude::*;
   recursive(|base_expr| {
     add_expr_parser(base_expr)
+  })
+}
+
+#[test]
+fn test_shift_exprs() {
+  test_shift_expr_str("foo << bar");
+  test_shift_expr_str("foo >> bar");
+  test_shift_expr_str("foo >> !bar");
+  test_shift_expr_str("~foo >> bar(bang << 3)");
+}
+
+fn test_shift_expr_str(s: &str) {
+  let parsed = full_shift_expr_parser().parse(s);
+  match parsed.into_result() {
+    Ok(res) => {
+      println!("KVKV - SHIFT-EXPR: {:?}", res);
+    },
+    Err(e) => panic!("Failed to parse: {} - {:?}", s, e),
+  }
+}
+
+fn full_shift_expr_parser<'a>()
+  -> impl Clone + Parser<'a, &'a str, Expression<'a>, Default>
+{
+  use chumsky::prelude::*;
+  recursive(|base_expr| {
+    shift_expr_parser(base_expr)
   })
 }
 

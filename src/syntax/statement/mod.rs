@@ -93,14 +93,3 @@ impl<'a> StatementBlock<'a> {
       .boxed()
   }
 }
-
-/**
- * A helper to terminate a statement with a semicolon.
- */
-fn terminal_semicolon_parser<'a, E>()
-  -> impl Clone + Parser<'a, &'a str, (), E>
-  where E: ParserExtra<'a, &'a str>
-{
-  use chumsky::prelude::*;
-  just(';').padded_by(whitespace_parser()).map(|_| ())
-}

@@ -180,9 +180,7 @@ fn test_shift_exprs() {
 fn test_shift_expr_str(s: &str) {
   let parsed = full_shift_expr_parser().parse(s);
   match parsed.into_result() {
-    Ok(res) => {
-      println!("KVKV - SHIFT-EXPR: {:?}", res);
-    },
+    Ok(_) => {},
     Err(e) => panic!("Failed to parse: {} - {:?}", s, e),
   }
 }

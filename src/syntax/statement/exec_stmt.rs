@@ -4,7 +4,7 @@ use chumsky::{
 };
 use crate::syntax::{
   expression::Expression,
-  statement::terminal_semicolon_parser,
+  terminal_semicolon_parser,
   util::whitespace1_parser,
 };
 

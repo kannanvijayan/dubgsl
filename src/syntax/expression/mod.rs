@@ -33,7 +33,6 @@ pub(crate) use self::{
 
 use chumsky::{
   Parser,
-  span::SimpleSpan,
   extra::ParserExtra,
   Boxed,
 };
@@ -103,7 +102,7 @@ impl<'a> Expression<'a> {
               state
             }
           ).finalize();
-          result.map_err(|err| E::Error::expected_found([], None, span)) 
+          result.map_err(|_err| E::Error::expected_found([], None, span)) 
         })
     }).boxed()
   }

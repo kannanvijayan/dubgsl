@@ -1,5 +1,3 @@
-use core::str;
-
 use chumsky::{
   Parser,
   extra::Default,

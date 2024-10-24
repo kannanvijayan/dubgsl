@@ -28,6 +28,15 @@ fn test_declarations() {
   }");
 
   test_decl_str("struct Foo { a: int, b: bool }");
+
+  test_decl_str("buffer(r) B: int;");
+  test_decl_str("buffer(rw  ) B: int;");
+  test_decl_str("buffer(w) elevations: Terrain::Elevations;");
+
+  test_decl_str("entrypoint(2d) gen_terrain(point) {
+    let x = point.x;
+    let y = point.y;
+  }");
 }
 
 fn test_decl_str(s: &str) {

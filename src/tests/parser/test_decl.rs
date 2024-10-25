@@ -37,6 +37,16 @@ fn test_declarations() {
     let x = point.x;
     let y = point.y;
   }");
+  test_decl_str("module Foo(
+    buffer(r) terrain: Terrain::Elevations,
+    type Foo,
+  ) {
+    func bar() -> int {
+      ret 9;
+    }
+  }");
+
+  test_decl_str("instance T = Foo::Bar(terrain_buffer, Terrain::Elevation);");
 }
 
 fn test_decl_str(s: &str) {

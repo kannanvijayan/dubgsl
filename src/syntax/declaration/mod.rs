@@ -70,6 +70,20 @@ impl<'a> Declaration<'a> {
       .padded_by(whitespace_parser())
     }).boxed()
   }
+
+  pub fn parser_for_module<E>()
+    -> Boxed<'a, 'a, &'a str, Declaration<'a>, E>
+    where E: ParserExtra<'a, &'a str>
+  {
+    use chumsky::prelude::*;
+
+    recursive(|decl_parser| {
+      choice((
+        func_decl_parser().map(Declaration::Func),
+      ))
+      .padded_by(whitespace_parser())
+    }).boxed()
+  }
 }
 
 

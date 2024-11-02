@@ -77,12 +77,11 @@ impl<'a> Declaration<'a> {
   {
     use chumsky::prelude::*;
 
-    recursive(|decl_parser| {
-      choice((
-        func_decl_parser().map(Declaration::Func),
-      ))
-      .padded_by(whitespace_parser())
-    }).boxed()
+    choice((
+      func_decl_parser().map(Declaration::Func),
+    ))
+    .padded_by(whitespace_parser())
+    .boxed()
   }
 }
 

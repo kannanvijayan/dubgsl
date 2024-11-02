@@ -38,8 +38,7 @@ fn test_declarations() {
     let y = point.y;
   }");
   test_decl_str("module Foo(
-    buffer(r) terrain: Terrain::Elevations,
-    type Foo,
+    buffer(r) terrain: Terrain::Elevations
   ) {
     func bar() -> int {
       ret 9;

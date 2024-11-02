@@ -22,7 +22,6 @@ pub struct ModuleDecl<'a> {
 #[derive(Debug, Clone)]
 pub enum ModuleDeclParam<'a> {
   Buffer(ModuleDeclBufferParam<'a>),
-  Type(ModuleDeclTypeParam<'a>),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -76,10 +75,7 @@ pub(crate) fn module_decl_param_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  choice((
-    module_decl_buffer_param_parser().map(ModuleDeclParam::Buffer),
-    module_decl_type_param_parser().map(ModuleDeclParam::Type),
-  ))
+  module_decl_buffer_param_parser().map(ModuleDeclParam::Buffer)
 }
 
 pub(crate) fn module_decl_buffer_param_parser<'a, E>()
@@ -105,18 +101,5 @@ pub(crate) fn module_decl_buffer_param_parser<'a, E>()
     .then(TypeName::parser())
     .map(|((mode, name), ty)| {
       ModuleDeclBufferParam { mode, name, ty }
-    })
-}
-
-pub(crate) fn module_decl_type_param_parser<'a, E>()
-  -> impl Clone + Parser<'a, &'a str, ModuleDeclTypeParam<'a>, E>
-  where E: ParserExtra<'a, &'a str>
-{
-  use chumsky::prelude::*;
-
-  just("type").then(whitespace1_parser())
-    .ignore_then(Name::parser())
-    .map(|name| {
-      ModuleDeclTypeParam { name }
     })
 }

@@ -4,8 +4,7 @@ use chumsky::{
 };
 use crate::syntax::{
   name::{ Name, NamePath },
-  terminal_semicolon_parser,
-  util::{ whitespace_parser, whitespace1_parser },
+  util::{ terminal_semicolon_parser, whitespace_parser, whitespace1_parser },
 };
 
 /**

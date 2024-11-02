@@ -5,8 +5,7 @@ use chumsky::{
 use crate::syntax::{
   expression::Expression,
   name::Name,
-  terminal_semicolon_parser,
-  util::{ whitespace_parser, whitespace1_parser },
+  util::{ terminal_semicolon_parser, whitespace_parser, whitespace1_parser },
 };
 
 /**

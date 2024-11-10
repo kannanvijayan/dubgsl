@@ -9,7 +9,7 @@ use crate::syntax::{
 };
 
 /**
- * A bitwise (and, or, xor) binary expression.
+ * A let statement.
  */
 #[derive(Debug, Clone)]
 pub struct LetStmt<'a> {

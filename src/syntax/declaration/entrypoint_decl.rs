@@ -9,7 +9,7 @@ use crate::syntax::{
 };
 
 /**
- * A function declaration.
+ * An entrypoint declaration.
  */
 #[derive(Debug, Clone)]
 pub struct EntrypointDecl<'a> {
@@ -20,10 +20,11 @@ pub struct EntrypointDecl<'a> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
 pub enum EntrypointDeclDims {
-  D1,
-  D2,
-  D3,
+  D1 = 1,
+  D2 = 2,
+  D3 = 3,
 }
 
 pub(crate) fn entrypoint_decl_parser<'a, E>()

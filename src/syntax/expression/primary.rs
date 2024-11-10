@@ -38,6 +38,25 @@ pub struct CallExpr<'a> {
   pub args: Vec<Expression<'a>>,
 }
 
+fn make_dot_tail_parser<'a, E>(
+) -> impl 'a + Clone + Parser<'a, &'a str, DotExprSuffix<'a>, E>
+  where E: ParserExtra<'a, &'a str>
+{
+  use chumsky::prelude::*;
+  just(".").padded_by(whitespace_parser())
+    .ignore_then(
+      choice((
+        Name::parser().map(DotExprSuffix::Name),
+        choice((
+          just('0').map(|_| 0_u32),
+          just('1').map(|_| 1_u32),
+          just('2').map(|_| 2_u32),
+          just('3').map(|_| 3_u32),
+        )).map(DotExprSuffix::Number),
+      ))
+    )
+}
+
 pub(crate) fn primary_expr_parser<'a, E>(
   base_expr: impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
 ) -> impl 'a + Clone + Parser<'a, &'a str, Expression<'a>, E>
@@ -49,20 +68,7 @@ pub(crate) fn primary_expr_parser<'a, E>(
     Call(Vec<Expression<'a>>),
   }
 
-  let dot_tail_parser = 
-    just(".").padded_by(whitespace_parser())
-      .ignore_then(
-        choice((
-          Name::parser().map(DotExprSuffix::Name),
-          choice((
-            just('0').map(|_| 0_u32),
-            just('1').map(|_| 1_u32),
-            just('2').map(|_| 2_u32),
-            just('3').map(|_| 3_u32),
-          )).map(DotExprSuffix::Number),
-        ))
-        .map(PrimaryTail::Dot)
-      );
+  let dot_tail_parser = make_dot_tail_parser().map(PrimaryTail::Dot);
 
   let call_tail_parser =
     just("(").padded_by(whitespace_parser())

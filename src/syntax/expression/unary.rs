@@ -11,7 +11,7 @@ use crate::syntax::{
 };
 
 /**
- * A dot-expression accesses a component of a value expression.
+ * A unary expression.
  */
 #[derive(Debug, Clone)]
 pub struct UnaryExpr<'a> {

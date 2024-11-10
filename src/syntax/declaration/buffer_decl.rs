@@ -9,7 +9,7 @@ use crate::syntax::{
 };
 
 /**
- * An import declaration.
+ * A buffer declaration.
  */
 #[derive(Debug, Clone)]
 pub struct BufferDecl<'a> {

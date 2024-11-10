@@ -9,7 +9,7 @@ use crate::syntax::{
 };
 
 /**
- * An import declaration.
+ * An instance declaration.
  */
 #[derive(Debug, Clone)]
 pub struct InstanceDecl<'a> {

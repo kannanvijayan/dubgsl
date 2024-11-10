@@ -10,7 +10,7 @@ use crate::syntax::util::whitespace_parser;
 
 pub use self::{
   buffer_decl::BufferDecl,
-  entrypoint_decl::EntrypointDecl,
+  entrypoint_decl::{ EntrypointDecl, EntrypointDeclDims },
   func_decl::FuncDecl,
   import_decl::ImportDecl,
   instance_decl::InstanceDecl,

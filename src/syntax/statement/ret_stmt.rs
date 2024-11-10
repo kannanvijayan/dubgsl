@@ -8,7 +8,7 @@ use crate::syntax::{
 };
 
 /**
- * A bitwise (and, or, xor) binary expression.
+ * A return statement.
  */
 #[derive(Debug, Clone)]
 pub struct RetStmt<'a> {

@@ -9,7 +9,7 @@ use crate::syntax::{
 };
 
 /**
- * A struct type declaration.
+ * A struct declaration.
  */
 #[derive(Debug, Clone)]
 pub struct StructDecl<'a> {

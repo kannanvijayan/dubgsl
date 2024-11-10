@@ -9,7 +9,7 @@ use crate::syntax::{
 };
 
 /**
- * A bitwise (and, or, xor) binary expression.
+ * An if statement.
  */
 #[derive(Debug, Clone)]
 pub struct IfStmt<'a> {

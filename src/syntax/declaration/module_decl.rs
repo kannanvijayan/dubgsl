@@ -10,7 +10,7 @@ use crate::syntax::{
 };
 
 /**
- * An import declaration.
+ * A module declaration.
  */
 #[derive(Debug, Clone)]
 pub struct ModuleDecl<'a> {

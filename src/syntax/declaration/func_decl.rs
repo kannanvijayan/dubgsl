@@ -16,7 +16,7 @@ use crate::syntax::{
 pub struct FuncDecl<'a> {
   pub name: Name<'a>,
   pub arguments: Vec<FuncDeclArgument<'a>>,
-  pub return_type: Option<TypeName<'a>>,
+  pub return_ty: Option<TypeName<'a>>,
   pub body: StatementBlock<'a>,
 }
 
@@ -52,7 +52,7 @@ pub(crate) fn func_decl_parser<'a, E>()
     )
     .then(StatementBlock::parser(Statement::parser()))
     .map(|(((name, arguments), return_type), body)| {
-      FuncDecl { name, arguments, return_type, body }
+      FuncDecl { name, arguments, return_ty: return_type, body }
     })
     .boxed()
 }

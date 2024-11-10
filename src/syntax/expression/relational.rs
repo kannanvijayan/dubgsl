@@ -12,7 +12,7 @@ use crate::syntax::{
 };
 
 /**
- * An additive (add, sub) binary expression.
+ * A relational (lt, le, gt, ge, eq, ne) boolean-valued binary expression.
  */
 #[derive(Debug, Clone)]
 pub struct RelationalExpr<'a> {

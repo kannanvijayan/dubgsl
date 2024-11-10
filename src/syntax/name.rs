@@ -31,8 +31,7 @@ impl<'a> Name<'a> {
  */
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NamePath<'a> {
-  pub prefix: Vec<Name<'a>>,
-  pub name: Name<'a>,
+  pub parts: Vec<Name<'a>>,
 }
 impl<'a> NamePath<'a> {
   pub fn parser<E>() -> impl Clone + Parser<'a, &'a str, NamePath<'a>, E>
@@ -45,11 +44,14 @@ impl<'a> NamePath<'a> {
       )
       .at_least(1)
       .collect::<Vec<_>>()
-      .map(|mut names| {
-        let name = names.pop().expect("Empty name path");
-        NamePath { prefix: names, name }
+      .map(|mut parts| {
+        NamePath { parts }
       })
       .boxed()
+  }
+
+  pub fn is_single(&self) -> bool {
+    self.parts.len() == 1
   }
 }
 

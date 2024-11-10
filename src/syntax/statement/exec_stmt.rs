@@ -8,7 +8,7 @@ use crate::syntax::{
 };
 
 /**
- * A bitwise (and, or, xor) binary expression.
+ * An exec statement (executes a bare expression). 
  */
 #[derive(Debug, Clone)]
 pub struct ExecStmt<'a> {

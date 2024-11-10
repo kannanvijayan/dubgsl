@@ -68,14 +68,14 @@ impl<'a> Expression<'a> {
     Self::shift_reduce_parser()
   }
 
-  pub fn old_parser<E>()
+  pub fn lvalue_parser<E>()
     -> Boxed<'a, 'a, &'a str, Expression<'a>, E>
     where E: ParserExtra<'a, &'a str>,
   {
     use chumsky::prelude::*;
 
     recursive(|expr_parser| {
-      logical_expr_parser(expr_parser.clone())
+      primary_expr_parser(expr_parser)
     }).boxed()
   }
 

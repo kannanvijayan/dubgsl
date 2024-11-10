@@ -1,3 +1,4 @@
+mod mutate_stmt;
 mod exec_stmt;
 mod let_stmt;
 mod var_stmt;
@@ -8,6 +9,7 @@ mod loop_stmt;
 use crate::syntax::util::whitespace_parser;
 
 pub use self::{
+  mutate_stmt::MutateStmt,
   exec_stmt::ExecStmt,
   let_stmt::{ LetStmt, LetStmtPiece },
   var_stmt::{ VarStmt, VarStmtPiece },
@@ -16,6 +18,7 @@ pub use self::{
   loop_stmt::LoopStmt,
 };
 pub(crate) use self::{
+  mutate_stmt::mutate_stmt_parser,
   exec_stmt::exec_stmt_parser,
   let_stmt::let_stmt_parser,
   var_stmt::var_stmt_parser,
@@ -35,6 +38,7 @@ use chumsky::{
  */
 #[derive(Debug, Clone)]
 pub enum Statement<'a> {
+  Mutate(MutateStmt<'a>),
   Exec(ExecStmt<'a>),
   Let(LetStmt<'a>),
   Var(VarStmt<'a>),
@@ -55,6 +59,7 @@ impl<'a> Statement<'a> {
 
     recursive(|stmt_parser| {
       choice((
+        mutate_stmt_parser().map(Statement::Mutate),
         exec_stmt_parser().map(Statement::Exec),
         let_stmt_parser().map(Statement::Let),
         var_stmt_parser().map(Statement::Var),

@@ -22,16 +22,6 @@ pub(crate) fn whitespace_parser<'a, E>()
 }
 
 /**
- * Parser for whitespace, requiring at least 1 char.
- */
-pub(crate) fn whitespace1_parser<'a, E>()
-  -> impl Clone + Parser<'a, &'a str, (), E>
-  where E: ParserExtra<'a, &'a str>
-{
-    whitespace_char_parser().repeated().at_least(1).ignored()
-}
-
-/**
  * Lowercase letter parser.
  */
 pub(crate) fn lowercase_parser<'a, E>()

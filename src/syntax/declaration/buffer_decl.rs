@@ -31,7 +31,7 @@ pub(crate) fn buffer_decl_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("buffer")
+  text::keyword("buffer").then(whitespace_parser())
     .ignore_then(
       choice((
         just("rw").map(|_| BufferDeclMode::ReadWrite),

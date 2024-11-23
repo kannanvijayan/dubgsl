@@ -5,7 +5,7 @@ use chumsky::{
 use crate::syntax::{
   expression::Expression,
   statement::{ Statement, StatementBlock },
-  util::{ whitespace_parser, whitespace1_parser },
+  util::whitespace_parser,
 };
 
 /**
@@ -25,13 +25,12 @@ pub(crate) fn if_stmt_parser<'a, E>(
 {
   use chumsky::prelude::*;
 
-  just("if").then(whitespace1_parser())
+  text::keyword("if").then(whitespace_parser())
     .ignore_then(Expression::parser())
     .then_ignore(whitespace_parser())
     .then(StatementBlock::parser(stmt_parser.clone()))
     .then(
-      whitespace_parser()
-        .ignore_then(just("else").then(whitespace1_parser()))
+      text::keyword("else").padded_by(whitespace_parser())
         .ignore_then(StatementBlock::parser(stmt_parser.clone()))
         .or_not()
     )

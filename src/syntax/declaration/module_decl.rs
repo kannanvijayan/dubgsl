@@ -6,7 +6,7 @@ use crate::syntax::{
   name::Name,
   types::TypeName,
   declaration::{ Declaration, DeclarationBlock },
-  util::{ whitespace_parser, whitespace1_parser },
+  util::whitespace_parser,
 };
 
 /**
@@ -50,7 +50,7 @@ pub(crate) fn module_decl_parser<'a, E>(
 {
   use chumsky::prelude::*;
 
-  just("module").then(whitespace1_parser())
+  text::keyword("module").then(whitespace_parser())
     .ignore_then(Name::parser())
     .then(
       module_decl_param_parser()
@@ -84,7 +84,7 @@ pub(crate) fn module_decl_buffer_param_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("buffer")
+  text::keyword("buffer")
     .ignore_then(
       choice((
         just("rw").map(|_| BufferParamMode::ReadWrite),

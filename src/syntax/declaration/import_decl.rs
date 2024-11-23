@@ -4,7 +4,7 @@ use chumsky::{
 };
 use crate::syntax::{
   name::{ Name, NamePath },
-  util::{ terminal_semicolon_parser, whitespace_parser, whitespace1_parser },
+  util::{ terminal_semicolon_parser, whitespace_parser },
 };
 
 /**
@@ -22,15 +22,12 @@ pub(crate) fn import_decl_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("import")
-    .then(whitespace1_parser())
+  text::keyword("import").then(whitespace_parser())
     .ignore_then(NamePath::parser())
     .then(
-      whitespace_parser()
-      .then(just("as"))
-      .then(whitespace1_parser())
-      .ignore_then(Name::parser())
-      .or_not()
+      text::keyword("as").padded_by(whitespace_parser())
+        .ignore_then(Name::parser())
+        .or_not()
     )
     .then_ignore(terminal_semicolon_parser())
     .map(|(name_path, maybe_alias)| {

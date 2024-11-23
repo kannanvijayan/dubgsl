@@ -5,7 +5,7 @@ use chumsky::{
 use crate::syntax::{
   name::{ Name, NamePath },
   types::TypeName,
-  util::{ terminal_semicolon_parser, whitespace_parser, whitespace1_parser },
+  util::{ terminal_semicolon_parser, whitespace_parser },
 };
 
 /**
@@ -24,7 +24,7 @@ pub(crate) fn instance_decl_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("instance").then(whitespace1_parser())
+  text::keyword("instance").then(whitespace_parser())
     .ignore_then(Name::parser())
     .then_ignore(just('=').padded_by(whitespace_parser()))
     .then(NamePath::parser())

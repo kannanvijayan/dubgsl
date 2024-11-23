@@ -33,7 +33,7 @@ pub(crate) fn entrypoint_decl_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("entrypoint")
+  text::keyword("entrypoint").then(whitespace_parser())
     .ignore_then(
       choice((
         just("1d").map(|_| EntrypointDeclDims::D1),

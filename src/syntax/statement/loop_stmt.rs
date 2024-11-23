@@ -4,7 +4,7 @@ use chumsky::{
 };
 use crate::syntax::{
   statement::{ Statement, StatementBlock },
-  util::whitespace1_parser,
+  util::whitespace_parser,
 };
 
 /**
@@ -22,7 +22,7 @@ pub(crate) fn loop_stmt_parser<'a, E>(
 {
   use chumsky::prelude::*;
 
-  just("loop").then(whitespace1_parser())
+  text::keyword("loop").then(whitespace_parser())
     .ignore_then(StatementBlock::parser(stmt_parser.clone()))
     .map(|block| {
       LoopStmt { block }

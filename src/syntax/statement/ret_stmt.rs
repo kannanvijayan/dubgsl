@@ -4,7 +4,7 @@ use chumsky::{
 };
 use crate::syntax::{
   expression::Expression,
-  util::{ terminal_semicolon_parser, whitespace1_parser },
+  util::{ terminal_semicolon_parser, whitespace_parser },
 };
 
 /**
@@ -21,7 +21,7 @@ pub(crate) fn ret_stmt_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("ret").then(whitespace1_parser())
+  text::keyword("ret").then(whitespace_parser())
     .ignore_then(Expression::parser().or_not())
     .map(|expr| {
       RetStmt { value: expr.map(Box::new) }

@@ -5,7 +5,7 @@ use chumsky::{
 use crate::syntax::{
   name::Name,
   types::TypeName,
-  util::{ whitespace_parser, whitespace1_parser },
+  util::whitespace_parser,
 };
 
 /**
@@ -29,8 +29,7 @@ pub(crate) fn struct_decl_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("struct")
-    .then(whitespace1_parser())
+  text::keyword("struct").then(whitespace_parser())
     .ignore_then(Name::parser())
     .then(
       struct_decl_field_parser()

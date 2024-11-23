@@ -6,7 +6,7 @@ use crate::syntax::{
   name::Name,
   types::TypeName,
   statement::{ Statement, StatementBlock },
-  util::{ whitespace_parser, whitespace1_parser },
+  util::whitespace_parser,
 };
 
 /**
@@ -32,8 +32,7 @@ pub(crate) fn func_decl_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("func")
-    .then(whitespace1_parser())
+  text::keyword("func").then(whitespace_parser())
     .ignore_then(Name::parser())
     .then(
       func_decl_argument_parser()

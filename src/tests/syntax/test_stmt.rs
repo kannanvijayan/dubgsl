@@ -37,6 +37,8 @@ fn test_statements() {
     }
   }
     ");
+
+  test_stmt_str("mutate x = y + 9 ;");
 }
 
 fn test_exec_ret_expr(s: &str) {

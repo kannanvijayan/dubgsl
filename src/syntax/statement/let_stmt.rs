@@ -5,7 +5,7 @@ use chumsky::{
 use crate::syntax::{
   expression::Expression,
   name::Name,
-  util::{ terminal_semicolon_parser, whitespace_parser, whitespace1_parser },
+  util::{ terminal_semicolon_parser, whitespace_parser },
 };
 
 /**
@@ -28,7 +28,7 @@ pub(crate) fn let_stmt_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("let").then(whitespace1_parser())
+  text::keyword("let").then(whitespace_parser())
     .ignore_then(
       Name::parser()
         .then_ignore(just('=').padded_by(whitespace_parser()))

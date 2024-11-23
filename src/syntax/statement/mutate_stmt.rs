@@ -3,9 +3,8 @@ use chumsky::{
   extra::ParserExtra,
 };
 use crate::syntax::{
-  expression::{ Expression, primary_expr_parser },
-  name::Name,
-  util::{ terminal_semicolon_parser, whitespace1_parser, whitespace_parser },
+  expression::Expression,
+  util::{ terminal_semicolon_parser, whitespace_parser },
 };
 
 /**
@@ -23,7 +22,7 @@ pub(crate) fn mutate_stmt_parser<'a, E>()
 {
   use chumsky::prelude::*;
 
-  just("mutate").then(whitespace1_parser())
+  text::keyword("mutate").ignore_then(whitespace_parser())
     .ignore_then(Expression::lvalue_parser())
     .then_ignore(just('=').padded_by(whitespace_parser()))
     .then(Expression::parser())

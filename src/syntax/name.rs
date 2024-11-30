@@ -44,7 +44,7 @@ impl<'a> NamePath<'a> {
       )
       .at_least(1)
       .collect::<Vec<_>>()
-      .map(|mut parts| {
+      .map(|parts| {
         NamePath { parts }
       })
       .boxed()

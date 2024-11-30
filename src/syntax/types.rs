@@ -3,16 +3,7 @@
  */
 
 use chumsky::{ Parser, extra::ParserExtra };
-use crate::{
-  model::{
-    ModelSpace,
-    TypeModelHandle,
-    TypeModel,
-    ScalarTypeModel,
-    ScalarNumericTypeModel,
-  },
-  syntax::name::NamePath,
-};
+use crate::syntax::name::NamePath;
 
 /**
  * A type name.

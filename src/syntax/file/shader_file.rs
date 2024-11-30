@@ -12,6 +12,7 @@ use crate::syntax::{
     FuncDecl,
     ModuleDecl,
     StructDecl,
+    UniformsDecl,
     entrypoint_decl_parser,
     buffer_decl_parser,
     import_decl_parser,
@@ -19,6 +20,7 @@ use crate::syntax::{
     func_decl_parser,
     module_decl_parser,
     struct_decl_parser,
+    uniforms_decl_parser,
   },
   util::whitespace_parser,
 };
@@ -60,6 +62,7 @@ pub enum ShaderFileDeclaration<'a> {
   Func(FuncDecl<'a>),
   Module(ModuleDecl<'a>),
   Struct(StructDecl<'a>),
+  Uniforms(UniformsDecl<'a>),
 }
 impl<'a> ShaderFileDeclaration<'a> {
   pub fn parser<E>() -> impl Clone + Parser<'a, &'a str, Self, E>
@@ -76,6 +79,7 @@ impl<'a> ShaderFileDeclaration<'a> {
       module_decl_parser(Declaration::parser_for_module())
         .map(ShaderFileDeclaration::Module),
       struct_decl_parser().map(ShaderFileDeclaration::Struct),
+      uniforms_decl_parser().map(ShaderFileDeclaration::Uniforms),
     ))
     .boxed()
   }

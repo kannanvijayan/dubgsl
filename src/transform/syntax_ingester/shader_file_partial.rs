@@ -9,6 +9,7 @@ use crate::{
     FuncDeclPartial,
     ModuleDeclPartial,
     StructDeclPartial,
+    UniformsDeclPartial,
   },
 };
 
@@ -18,12 +19,17 @@ use crate::{
 #[derive(Debug, Clone)]
 pub struct ShaderFilePartial<'a> {
   pub(crate) path: StringModelHandle,
+  pub(crate) uniforms: Option<UniformsDeclPartial<'a>>,
   pub(crate) declarations:
     HashMap<NameModelHandle, ShaderFileDeclarationPartial<'a>>,
 }
 impl<'a> ShaderFilePartial<'a> {
   pub(crate) fn new(path: StringModelHandle) -> ShaderFilePartial<'a> {
-    ShaderFilePartial { path, declarations: HashMap::new() }
+    ShaderFilePartial {
+      path,
+      uniforms: None,
+      declarations: HashMap::new(),
+    }
   }
 
   fn add(&mut self, name: NameModelHandle, decl: ShaderFileDeclarationPartial<'a>) {
@@ -55,31 +61,35 @@ impl<'a> ShaderFilePartial<'a> {
   }
 
   pub(crate) fn add_instance_decl(&mut self, instance_decl: InstanceDeclPartial<'a>) {
-    self.declarations.insert(
+    self.add(
       instance_decl.name.clone(),
       ShaderFileDeclarationPartial::Instance(instance_decl)
     );
   }
 
   pub(crate) fn add_func_decl(&mut self, func_decl: FuncDeclPartial<'a>) {
-    self.declarations.insert(
+    self.add(
       func_decl.name.clone(),
       ShaderFileDeclarationPartial::Func(func_decl)
     );
   }
 
   pub(crate) fn add_module_decl(&mut self, module_decl: ModuleDeclPartial<'a>) {
-    self.declarations.insert(
+    self.add(
       module_decl.name.clone(),
       ShaderFileDeclarationPartial::Module(module_decl)
     );
   }
 
   pub(crate) fn add_struct_decl(&mut self, struct_decl: StructDeclPartial<'a>) {
-    self.declarations.insert(
+    self.add(
       struct_decl.name.clone(),
       ShaderFileDeclarationPartial::Struct(struct_decl)
     );
+  }
+
+  pub(crate) fn add_uniforms_decl(&mut self, uniforms_decl: UniformsDeclPartial<'a>) {
+    self.uniforms = Some(uniforms_decl);
   }
 }
 

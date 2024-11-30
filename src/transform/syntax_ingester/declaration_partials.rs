@@ -6,6 +6,7 @@ use crate::{
       InstanceDecl,
       ModuleDecl,
       StructDecl,
+      UniformsDecl,
     },
     name::NamePath,
   },
@@ -56,6 +57,11 @@ pub struct ModuleDeclPartial<'a> {
 pub struct StructDeclPartial<'a> {
   pub(crate) name: NameModelHandle,
   pub(crate) syntax_decl: StructDecl<'a>,
+}
+
+#[derive(Debug, Clone)]
+pub struct UniformsDeclPartial<'a> {
+  pub(crate) syntax_decl: UniformsDecl<'a>,
 }
 
 #[derive(Debug, Clone)]

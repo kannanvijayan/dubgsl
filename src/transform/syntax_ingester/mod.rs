@@ -13,6 +13,7 @@ pub(crate) use self::{
     InstanceDeclPartial,
     ModuleDeclPartial,
     StructDeclPartial,
+    UniformsDeclPartial,
   },
   type_partials::TypeRefPartial,
 };
@@ -29,13 +30,7 @@ use crate::{
   },
   syntax::{
     declaration::{
-      EntrypointDecl,
-      BufferDecl,
-      ImportDecl,
-      InstanceDecl,
-      FuncDecl,
-      ModuleDecl,
-      StructDecl,
+      BufferDecl, EntrypointDecl, FuncDecl, ImportDecl, InstanceDecl, ModuleDecl, StructDecl, UniformsDecl
     },
     file::{ ShaderFile, ShaderFileDeclaration },
     types::TypeName,
@@ -77,13 +72,14 @@ impl<'a> SyntaxIngester<'a> {
     let mut ingester = SyntaxIngester::new(&session_config);
 
     let sub_path = ingester.model_space.intern_string(sub_path);
-    ingester.ingest_shader_file_contents(sub_path, contents)
+    let _partial = ingester.ingest_shader_file_contents(&sub_path, contents);
+    ingester.model_space.add_shader_file_model(ShaderFileModel::new(sub_path))
   }
 
   fn ingest_shader_file_contents<'x: 'a>(&mut self,
-    sub_path: StringModelHandle,
+    sub_path: &StringModelHandle,
     file_contents: &'x str,
-  ) -> ShaderFileModelHandle {
+  ) -> ShaderFilePartial<'a> {
     let shader_file =
       ShaderFile::parser::<extra::Default>()
         .parse(file_contents)
@@ -97,7 +93,7 @@ impl<'a> SyntaxIngester<'a> {
       self.ingest_shader_file_declaration(&mut shader_file_partial, decl);
     }
 
-    self.model_space.add_shader_file_model(ShaderFileModel::new(sub_path))
+    shader_file_partial
   }
 
   /**
@@ -128,6 +124,9 @@ impl<'a> SyntaxIngester<'a> {
       },
       ShaderFileDeclaration::Struct(struct_decl) => {
         self.ingest_struct_decl(partial, struct_decl);
+      },
+      ShaderFileDeclaration::Uniforms(uniforms_decl) => {
+        self.ingest_uniforms_decl(partial, uniforms_decl);
       },
     }
   }
@@ -238,6 +237,18 @@ impl<'a> SyntaxIngester<'a> {
   ) {
     let name = self.model_space.intern_name(struct_decl.name.contents);
     partial.add_struct_decl(StructDeclPartial { name, syntax_decl: struct_decl });
+  }
+
+  /**
+   * Ingest a uniforms declaration.
+   */
+  fn ingest_uniforms_decl(&mut self,
+    partial: &mut ShaderFilePartial<'a>,
+    uniforms_decl: UniformsDecl<'a>,
+  ) {
+    partial.add_uniforms_decl(
+      UniformsDeclPartial { syntax_decl: uniforms_decl }
+    );
   }
 
   /**

@@ -15,7 +15,7 @@ pub use self::{
   import_decl::ImportDecl,
   instance_decl::InstanceDecl,
   module_decl::ModuleDecl,
-  struct_decl::StructDecl,
+  struct_decl::{ StructDecl, UniformsDecl },
 };
 pub(crate) use self::{
   buffer_decl::buffer_decl_parser,
@@ -24,7 +24,7 @@ pub(crate) use self::{
   import_decl::import_decl_parser,
   instance_decl::instance_decl_parser,
   module_decl::module_decl_parser,
-  struct_decl::struct_decl_parser,
+  struct_decl::{ struct_decl_parser, uniforms_decl_parser },
 };
 
 use chumsky::{
@@ -45,6 +45,7 @@ pub enum Declaration<'a> {
   Func(FuncDecl<'a>),
   Module(ModuleDecl<'a>),
   Struct(StructDecl<'a>),
+  Uniforms(UniformsDecl<'a>),
 }
 impl<'a> Declaration<'a> {
   pub fn boxed(self) -> Box<Self> {
@@ -66,6 +67,7 @@ impl<'a> Declaration<'a> {
         func_decl_parser().map(Declaration::Func),
         module_decl_parser(decl_parser).map(Declaration::Module),
         struct_decl_parser().map(Declaration::Struct),
+        uniforms_decl_parser().map(Declaration::Uniforms),
       ))
       .padded_by(whitespace_parser())
     }).boxed()

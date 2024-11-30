@@ -46,6 +46,12 @@ fn test_declarations() {
   }");
 
   test_decl_str("instance T = Foo::Bar(terrain_buffer, Terrain::Elevation);");
+
+  test_decl_str("uniforms {
+    a: int,
+    b: bool,
+    c: vec3xu32,
+  }");
 }
 
 fn test_decl_str(s: &str) {
